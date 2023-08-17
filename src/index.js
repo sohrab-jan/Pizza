@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "./index.css";
 
 const pizzaData = [
   {
@@ -48,7 +49,7 @@ const pizzaData = [
 
 function App() {
   return (
-    <div>
+    <div className="container">
       <Header />
       <Menu />
       <Footer />
@@ -56,33 +57,75 @@ function App() {
   );
 }
 
-function Header() {
-  return <h1>Fast React Pizza Co.</h1>;
+function Pizza({ pizza }) {
+  return (
+    <li className={`pizza ${pizza.soldOut ? "sold-out" : ""}`}>
+      <img src={pizza.photoName} alt={pizza.name} />
+      <div>
+        <h3>{pizza.name}</h3>
+        <p>{pizza.ingredients}</p>
+        <span>{pizza.soldOut ? "soldOut" : pizza.price}</span>
+      </div>
+    </li>
+  );
 }
 
 function Menu() {
   return (
-    <div>
+    <main className="menu">
       <h2>Our Menu</h2>
-      <Pizza />
-      <Pizza />
-      <Pizza />
-    </div>
+      {pizzaData.length > 0 ? (
+        <>
+          <p>
+            lorem ipsom lorem ipsomlorem ipsomlorem ipsomlorem ipsomlorem
+            ipsomlorem ipsomlorem ipsomlorem ipsomlorem ipsomlorem ipsom
+          </p>
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizza={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>we are currently working on our menu</p>
+      )}
+    </main>
+  );
+}
+
+function Header() {
+  return (
+    <header className="header">
+      <h1>Fast React Pizza Co.</h1>
+    </header>
   );
 }
 
 function Footer() {
+  const hour = new Date().getHours();
+  const endHour = 23;
+  const startHour = 12;
+  const isOpen = hour >= startHour && hour <= endHour;
+
   return (
-    <footer>{new Date().toLocaleString()}. We are currently opened.</footer>
+    <footer className="footer">
+      {isOpen ? (
+        <Order endHour={endHour} startHour={startHour} />
+      ) : (
+        <p>
+          we happy to welcome you between {startHour}:00 and {endHour}:00
+        </p>
+      )}
+    </footer>
   );
 }
-
-function Pizza() {
+function Order({ endHour, startHour }) {
   return (
-    <div>
-      <img src="pizzas/funghi.jpg" alt="pizza" />
-      <h1>Pizza Prosciutto</h1>
-      <p>Tomato, mozarella, ham, aragula, and burrata cheese</p>
+    <div className="order">
+      <p>
+        We are open from {startHour}:00 and close after {endHour}:00.
+      </p>
+      <button className="btn">Order</button>
     </div>
   );
 }
